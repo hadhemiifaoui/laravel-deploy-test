@@ -1,18 +1,16 @@
 services:
   - type: web
-    name: laravel-app
+    name: livewire-laravel-test
     env: php
     buildCommand: |
-      composer install
+      composer install --no-dev --optimize-autoloader
       php artisan key:generate
       php artisan migrate --force || true
     startCommand: php artisan serve --host 0.0.0.0 --port $PORT
     envVars:
       - key: APP_ENV
         value: production
-      - key: APP_KEY
-        value: base64:eZrxfR36nVSsXlmFD0QmVkXWGPE0FUqs9KvyCJ3tIlw=
       - key: APP_DEBUG
         value: false
       - key: APP_URL
-        value: https://your-app-name.onrender.com
+        value: https://livewire-laravel-test.onrender.com
