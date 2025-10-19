@@ -1,4 +1,4 @@
-# Use the official PHP image
+# Use the official PHP Apache image
 FROM php:8.2-apache
 
 # Install dependencies
@@ -24,8 +24,17 @@ COPY . .
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Install dependencies
+# Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
+
+# Ensure storage and cache directories are writable
+RUN chmod -R 775 storage bootstrap/cache
+
+# Copy .env.example as .env (required for key generation)
+RUN cp .env.example .env
+
+# Generate Laravel application key
+RUN php artisan key:generate
 
 # Expose port 80
 EXPOSE 80
