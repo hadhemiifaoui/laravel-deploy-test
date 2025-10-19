@@ -1,14 +1,8 @@
-# Use the official PHP Apache image
 FROM php:8.2-apache
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    zip \
-    git \
-    unzip \
+    libpng-dev libjpeg-dev libfreetype6-dev zip git unzip \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd pdo pdo_mysql
 
@@ -18,7 +12,7 @@ RUN a2enmod rewrite
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy existing app
+# Copy app files
 COPY . .
 
 # Install Composer
@@ -27,14 +21,18 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Ensure storage and cache directories are writable
-RUN chmod -R 775 storage bootstrap/cache
+# Ensure storage & cache are writable
+RUN mkdir -p storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
 
-# Copy .env.example as .env (required for key generation)
+# Copy .env.example as .env
 RUN cp .env.example .env
 
-# Generate Laravel application key
-RUN php artisan key:generate
+# Generate Laravel key
+RUN php artisan key:generate --ansi
+
+# Set Apache DocumentRoot to public folder
+RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 
 # Expose port 80
 EXPOSE 80
