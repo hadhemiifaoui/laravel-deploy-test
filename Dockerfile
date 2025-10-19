@@ -34,6 +34,9 @@ RUN php artisan key:generate --ansi
 # Set correct permissions for www-data
 RUN chown -R www-data:www-data storage bootstrap/cache
 
+# Run migrations automatically
+RUN php artisan migrate --force
+
 # Set Apache DocumentRoot to public folder
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 
