@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: laravel-app
+    env: php
+    buildCommand: |
+      composer install
+      php artisan key:generate
+      php artisan migrate --force || true
+    startCommand: php artisan serve --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_KEY
+        value: base64:eZrxfR36nVSsXlmFD0QmVkXWGPE0FUqs9KvyCJ3tIlw=
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        value: https://your-app-name.onrender.com
