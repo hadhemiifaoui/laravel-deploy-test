@@ -12,7 +12,7 @@ Route::get('/', function () {
 
 
 
-Route::get('/', [TodoController::class, 'index']);
+Route::get('/ajax_test', [TodoController::class, 'index']);
 Route::post('/todos', [TodoController::class, 'store'])->name('todos.store');
 
 Route::get('/tasks-page', function () {
@@ -21,6 +21,6 @@ Route::get('/tasks-page', function () {
 
 
 
-Route::get('/users', function () {
+Route::get('/', function () {
     return view('users.index');
 });
